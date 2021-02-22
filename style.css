@@ -1,0 +1,31 @@
+body {
+    background: grey;
+}
+
+.note {
+    border: 1px solid black;
+    margin: 2rem;
+    padding: 1rem;
+    width: 33%;
+    background: #a4a4a4;
+    border-radius: 0.5rem;
+}
+
+.title {
+    font-weight: 900;
+    font-size: 1.4rem;
+}
+
+.text, .list {
+    margin: 0.5rem;
+}
+
+.date {
+    font-style: italic;
+    font-size: 0.8rem;
+    text-align: end;
+}
+
+input {
+    display: block;
+}
