@@ -1,16 +1,53 @@
+* {
+    font-family: Tahoma, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     background: grey;
 }
 
-.note {
-    border: 1px solid black;
-    margin: 2rem;
+.error, .note, .create-note, .add-note {
+    border: 1px solid #282828;
+    margin: 1rem;
     padding: 1rem;
-    width: 33%;
     background: #a4a4a4;
-    border-radius: 0.5rem;
+    border-radius: 0.2rem;
 }
 
+.crud-note, .add-note {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: flex-end;
+}
+
+.body-note {
+    position: fixed;
+    right: 0;
+    top: 0;
+    overflow: auto;
+    height: 90%;
+    box-shadow: inset 0 0 15px black;
+    border-radius: 0.2rem;
+    margin: 2rem;
+    width: 450px;
+}
+
+.body-note::-webkit-scrollbar {
+    width: 10px;
+    border-radius: 2px;
+}
+
+.body-note::-webkit-scrollbar-thumb {
+    background: #323232;
+}
+
+/* =========== NOTE =========== */
 .title {
     font-weight: 900;
     font-size: 1.4rem;
@@ -26,6 +63,117 @@ body {
     text-align: end;
 }
 
-input {
+a {
+    border: 1px solid black;
+    background: #d4d4d4;
+    border-radius: 0.2rem;
+    padding: 2px 3px;
+    margin: 2px;
+}
+
+
+/* =========== CREATE NOTE =========== */
+.create-note, .add-note {
+    width: 400px;
+}
+
+.create-note > button, .add-note > button {
+    margin: 10px auto !important;
+    width: 200px;
     display: block;
+}
+
+.create-note > div {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.create-note label {
+    padding: 5px 0 5px 20px;
+}
+
+.champ, .button-checklist {
+    display: flex;
+    flex-direction: row !important;
+}
+
+.champ input {
+    width: 70%;
+}
+
+.create-note button, .add-note button {
+    padding: 5px;
+    margin: 5px;
+    border-radius: 0.2rem;
+    border: 1px solid #4e4e4e;
+}
+
+.create-note input {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 0.2rem;
+    border: none;
+}
+
+.button-checklist {
+    display: flex;
+    justify-content: space-between;
+}
+
+.create-note .close {
+    width: 100px;
+}
+
+.create-note textarea {
+    resize: none;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 0.2rem;
+    border: 1px solid #4e4e4e;
+}
+
+.create-note input[type=range] {
+    appearance: none;
+    width: 90%;
+    height: 0;
+    padding: 5px;
+    background: linear-gradient(
+            90deg, rgba(94, 192, 38, 1) 0%, rgba(253, 231, 0, 1) 33%, rgba(255, 132, 0, 1) 66%, rgba(199, 0, 57, 1) 100%);
+    outline: none;
+    margin: 10px auto;
+    border-radius: 0.2rem;
+}
+
+.create-note input[type=range]::-webkit-slider-thumb {
+    appearance: none;
+    width: 8px;
+    height: 20px;
+    background: #ffffff;
+    cursor: pointer;
+    border-radius: 0.2rem;
+}
+
+.choice .close {
+    margin: 5px 10px 5px auto;
+}
+
+.create-note .add, .add-note .add {
+    margin: 0 auto !important;
+}
+
+/* =========== ERROR =========== */
+.error {
+    padding: 20px 40px;
+    color: #8f0000;
+    border: 1px solid #8f0000;
+}
+
+.error ul {
+    padding: 5px 0 5px 40px;
+}
+
+/* =========== CALENDAR =========== */
+.current {
+    color: red;
 }
