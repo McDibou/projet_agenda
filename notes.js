@@ -4,14 +4,14 @@ let notesJSON = `[
         "title": "Note 1",
         "text": "Une méthode est une fonction appartenant à un objet",
         "urgent": "1",
-        "recallDate": "10-02-2021",
+        "recallDate": "03-02-2021",
         "createDate" : "10-11-2021"
     },
     {
         "title": "Note 2",
         "urgent": "2",
         "text": "test",
-        "recallDate": "10-03-2021",
+        "recallDate": "03-02-2021",
         "createDate" : "10-02-2021"
     },
     {
@@ -22,7 +22,7 @@ let notesJSON = `[
             {"test": false}
         ],
         "urgent": "1",
-        "recallDate": "10-06-2021",
+        "recallDate": "03-06-2021",
         "createDate" : "10-04-2021"
     }
 ]`

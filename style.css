@@ -1,179 +1,435 @@
 * {
-    font-family: Tahoma, sans-serif;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
 body {
-    background: grey;
+    background-color: lightgray;
+    font-family: 'Kanit', sans-serif;
 }
 
-.error, .note, .create-note, .add-note {
-    border: 1px solid #282828;
-    margin: 1rem;
-    padding: 1rem;
-    background: #a4a4a4;
-    border-radius: 0.2rem;
-}
-
-.crud-note, .add-note {
-    position: fixed;
-    right: 0;
-    bottom: 0;
+.calendar-base {
     display: flex;
-    flex-direction: row-reverse;
-    align-items: flex-end;
+    flex-direction: row;
+    border-radius: 20px;
+    background-color: white;
+    color: black;
+    width: 1200px;
+    height: 650px;
+    margin: 5% auto;
+    position: relative;
+}
+
+.calendar {
+    display: flex;
+    flex-direction: column;
+    margin: 10px auto;
+}
+
+.switch-years {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    margin: 20px 30px 10px 0;
+}
+
+.view-date {
+    margin: 10px;
+}
+
+.previous {
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-right: 10px solid #E8E8E8;
+    border-bottom: 5px solid transparent;
+    float: right;
+    position: relative;
+}
+
+.next {
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-left: 10px solid #E8E8E8;
+    border-bottom: 5px solid transparent;
+    float: right;
+    position: relative;
+}
+
+.previous:hover {
+    border-right: 10px solid #2ECC71;
+    cursor: pointer;
+}
+
+.next:hover {
+    border-left: 10px solid #2ECC71;
+    cursor: pointer;
+}
+
+.month {
+    margin: 10px 0;
+}
+
+.month > span {
+    color: #AAAAAA;
+    font-size: 1.1rem;
+    margin: 10px;
+
+}
+
+.month > span:hover {
+    color: #27e879 !important;
+    cursor: pointer;
+}
+
+.current-month {
+    font-weight: bold;
+    color: #27e879 !important;
+}
+
+table {
+    border-spacing: 2rem;
+}
+
+td, th {
+    text-align: center;
+    border-radius: 2rem;
+    padding: 10px;
+}
+
+td:hover {
+    color: #27e879 !important;
+    cursor: pointer;
+}
+
+.current-day {
+    font-weight: 900;
+}
+
+.selected-calendar {
+    background-color: #2ECC71;
+    color: white;
+    text-align: center !important;
+
+}
+
+.event {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    margin: -11px 0 0 17px;
+    border-radius: 50%;
+    background: red;
 }
 
 .body-note {
-    position: fixed;
-    right: 0;
-    top: 0;
+    width: 350px;
+    height: 100%;
+    border-radius: 20px 0 0 20px;
+    background-color: #2ECC71;
+    position: relative;
+}
+
+.view-day {
+    text-align: center;
+    margin-top: 25px;
+    color: white;
+}
+
+.view-day h1 {
+    font-size: 9rem;
+}
+
+.view-day h3 {
+    font-size: 2.2rem;
+}
+
+.add-note {
+    position: absolute;
+    bottom: 7%;
+    width: 100%;
+}
+
+
+.add-note > div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 75%;
+    margin: 10px auto;
+    color: white;
+    align-items: center;
+}
+
+.add-note a {
+    font-size: 1.8rem;
+    background: white;
+    height: 31px;
+    width: 31px;
+    border-radius: 50%;
+    color: #2ECC71;
+    transform: scale(.8);
+    text-align: center;
+    cursor: pointer;
+}
+
+.add-note hr {
+    border: none;
+    height: 2px;
+    background: white;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.read-note {
+    margin: 8%;
+    padding: 2%;
+    height: 40%;
     overflow: auto;
-    height: 90%;
-    box-shadow: inset 0 0 15px black;
-    border-radius: 0.2rem;
-    margin: 2rem;
-    width: 450px;
 }
 
-.body-note::-webkit-scrollbar {
+.note {
+    padding: 1rem;
+    margin: 1rem;
+    border-radius: 0.3rem;
+    box-shadow: 0 0 10px 0 #008f00;
+    position: relative;
+}
+
+.read-note::-webkit-scrollbar {
     width: 10px;
-    border-radius: 2px;
 }
 
-.body-note::-webkit-scrollbar-thumb {
-    background: #323232;
+.read-note::-webkit-scrollbar-thumb {
+    background: #6deaa2;
+    border-radius: 4px;
 }
 
-/* =========== NOTE =========== */
-.title {
-    font-weight: 900;
-    font-size: 1.4rem;
+.note .title {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin: 5px 0 8px 15px;
+    width: 80%;
 }
 
-.text, .list {
-    margin: 0.5rem;
+.note .text {
+    font-size: .9rem;
 }
 
-.date {
-    font-style: italic;
-    font-size: 0.8rem;
-    text-align: end;
+.note .list > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 10px;
 }
 
-a {
-    border: 1px solid black;
-    background: #d4d4d4;
-    border-radius: 0.2rem;
-    padding: 2px 3px;
-    margin: 2px;
+.note .list > div > div {
+    display: flex;
+    align-items: center;
 }
 
-
-/* =========== CREATE NOTE =========== */
-.create-note, .add-note {
-    width: 400px;
+.note label {
+    margin-left: 10px;
 }
 
-.create-note > button, .add-note > button {
-    margin: 10px auto !important;
-    width: 200px;
+.note .delete {
+    position: relative;
+    font-weight: bold;
+    transform: rotate(-45deg);
+    cursor: pointer;
+    margin-left: 20px;
+}
+
+.note .addCheck {
+    margin: 10px auto;
     display: block;
+    cursor: pointer;
+    width: fit-content;
+}
+
+.note .addCheck:hover, .note .delete:hover, .note .createCheck:hover {
+    color: #2ECC71;
+}
+
+.note .input-list {
+    border: none;
+    border-bottom: 2px solid lightgray;
+    padding: 2px;
+    width: 60%;
+    outline: none;
+}
+
+.note .createCheck {
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+.note .delete-note {
+    font-size: 1.4rem;
+    color: white;
+    cursor: pointer;
+    position: absolute;
+    top: -1px;
+    right: 3px;
+    transform: rotate(45deg);
+}
+
+.create-note {
+    position: absolute;
+    bottom: 0;
+    margin: 2%;
+    padding: 2%;
+    background-color: #2ECC71;
+    border: 2px solid white;
+    border-radius: 10px;
+    color: white;
+    width: 300px;
+    max-height: 500px;
 }
 
 .create-note > div {
-    padding: 10px;
     display: flex;
     flex-direction: column;
 }
 
 .create-note label {
-    padding: 5px 0 5px 20px;
+    margin: 5px 10px;
+    font-size: 1.1rem;
 }
 
-.champ, .button-checklist {
-    display: flex;
-    flex-direction: row !important;
-}
-
-.champ input {
-    width: 70%;
-}
-
-.create-note button, .add-note button {
+.create-note input, .create-note textarea {
     padding: 5px;
-    margin: 5px;
-    border-radius: 0.2rem;
-    border: 1px solid #4e4e4e;
-}
-
-.create-note input {
-    padding: 10px;
-    margin: 5px;
-    border-radius: 0.2rem;
+    margin-bottom: 10px;
     border: none;
-}
-
-.button-checklist {
-    display: flex;
-    justify-content: space-between;
-}
-
-.create-note .close {
-    width: 100px;
+    border-radius: 5px;
+    outline: none;
 }
 
 .create-note textarea {
     resize: none;
-    padding: 10px;
-    margin: 5px;
-    border-radius: 0.2rem;
-    border: 1px solid #4e4e4e;
 }
 
-.create-note input[type=range] {
+.create-note button {
+    width: 60%;
+    margin: 5px auto;
+    padding: 5px;
+    text-transform: uppercase;
+    display: block;
+    font-weight: bold;
+    color: #2ECC71;
+    background: white;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+}
+
+.create-note button:hover, .create-note > .close-create:hover, .add-note a:hover, .champ a:hover {
+    background: #6deaa2;
+    color: white;
+}
+
+.create-note > .close-create {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 15px;
+    font-size: 1.8rem;
+    background: white;
+    height: 31px;
+    width: 31px;
+    border-radius: 50%;
+    color: #2ECC71;
+    transform: rotate(45deg) scale(.7);
+    text-align: center;
+    cursor: pointer;
+}
+
+.add-list {
+    max-height: 150px;
+    margin-bottom: 20px;
+    overflow: auto;
+}
+
+.add-list::-webkit-scrollbar {
+    width: 10px;
+}
+
+.add-list::-webkit-scrollbar-thumb {
+    background: #6deaa2;
+    border-radius: 4px;
+}
+
+.champ {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 35px;
+}
+
+.champ > input {
+    margin: 0;
+}
+
+.champ a {
+    display: inline-block;
+    margin: 15px;
+    font-size: 1.8rem;
+    background: white;
+    height: 31px;
+    width: 31px;
+    border-radius: 50%;
+    color: #2ECC71;
+    transform: rotate(45deg) scale(.7);
+    text-align: center;
+    cursor: pointer;
+}
+
+
+input[type="range"] {
+    margin: 10px 0;
     appearance: none;
-    width: 90%;
+    width: 100%;
     height: 0;
     padding: 5px;
-    background: linear-gradient(
-            90deg, rgba(94, 192, 38, 1) 0%, rgba(253, 231, 0, 1) 33%, rgba(255, 132, 0, 1) 66%, rgba(199, 0, 57, 1) 100%);
+    border: 2px solid white;
+    background: linear-gradient(90deg, rgba(94, 192, 38, 1) 0%, rgba(253, 231, 0, 1) 33%, rgba(255, 132, 0, 1) 66%, rgba(199, 0, 57, 1) 100%);
     outline: none;
-    margin: 10px auto;
-    border-radius: 0.2rem;
 }
 
-.create-note input[type=range]::-webkit-slider-thumb {
+input[type="range"]::-webkit-slider-thumb {
     appearance: none;
-    width: 8px;
-    height: 20px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
     background: #ffffff;
     cursor: pointer;
-    border-radius: 0.2rem;
 }
 
-.choice .close {
-    margin: 5px 10px 5px auto;
-}
-
-.create-note .add, .add-note .add {
-    margin: 0 auto !important;
-}
-
-/* =========== ERROR =========== */
 .error {
-    padding: 20px 40px;
-    color: #8f0000;
-    border: 1px solid #8f0000;
+    position: absolute;
+    top: 0;
+    margin: 2%;
+    padding: 2%;
+    color: red;
+    border: 2px solid red;
+    background: white;
+    border-radius: 10px;
 }
 
 .error ul {
-    padding: 5px 0 5px 40px;
+    padding-left: 30px;
+    margin-top: 10px;
 }
 
-/* =========== CALENDAR =========== */
-.current {
+.error-notif {
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    right: 0;
+    margin: 15px 25px;
     color: red;
 }

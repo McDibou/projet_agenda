@@ -78,12 +78,6 @@ class Note {
         div.insertAdjacentText('afterbegin', value)
         content.append(div)
     }
-
-    static renderDate(date) {
-        let day = (date.getDate().toString().length === 1) ? '0' + date.getDate() : date.getDate()
-        let month = ((date.getMonth() + 1).toString().length === 1) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)
-        return day + '/' + month + '/' + date.getFullYear();
-    }
 }
 
 class TextNote extends Note {
@@ -117,13 +111,16 @@ class TextNote extends Note {
         let content = document.createElement('div')
         content.classList.add('note')
         content._noteReference_ = this
-        content.style.border = `1px solid ${Note.colorTab[this.urgent]}`
-        content.style.background = "linear-gradient(150deg," + Note.colorTab[this.urgent] + " 5%, rgba(0,212,255,0) 40%)"
+        content.style.background = "linear-gradient(45deg, rgb(255, 255, 255) 90%, " + Note.colorTab[this.urgent] + " 90%)"
 
         this.renderChamp(content, 'title', this.title)
         this.renderChamp(content, 'text', this.text)
-        this.renderChamp(content, 'date', 'Creer le ' + Note.renderDate(this.createDate))
-        this.renderChamp(content, 'date', 'Rappel le ' + Note.renderDate(this.recallDate))
+
+        let close = document.createElement('span')
+        close.classList.add('delete-note')
+        close.addEventListener('click', Add.deleteNotes)
+        close.innerHTML = "+"
+        content.append(close)
 
         readNote.insertAdjacentElement('beforeend', content)
     }
@@ -160,13 +157,16 @@ class ChecklistNote extends Note {
         let content = document.createElement('div')
         content.classList.add('note')
         content._noteReference_ = this
-        content.style.border = `1px solid ${Note.colorTab[this.urgent]}`
-        content.style.background = "linear-gradient(150deg," + Note.colorTab[this.urgent] + " 5%, rgba(0,212,255,0) 40%)"
+        content.style.background = "linear-gradient(45deg, rgb(255, 255, 255) 90%, " + Note.colorTab[this.urgent] + " 90%)"
 
         this.renderChamp(content, 'title', this.title)
         this.renderCheklist(content, 'list', this.list)
-        this.renderChamp(content, 'date', 'Creer le ' + Note.renderDate(this.createDate))
-        this.renderChamp(content, 'date', 'Rappel le ' + Note.renderDate(this.recallDate))
+
+        let close = document.createElement('span')
+        close.classList.add('delete-note')
+        close.addEventListener('click', Add.deleteNotes)
+        close.innerHTML = "+"
+        content.append(close)
 
         readNote.insertAdjacentElement('beforeend', content)
     }
@@ -194,7 +194,6 @@ class ChecklistNote extends Note {
             checkbox.addEventListener('change', Action.checkedList)
             if (Object.values(item)[0]) {
                 checkbox.checked = true
-
             }
 
             block.append(checkbox)
@@ -210,7 +209,11 @@ class Render {
     tab = []
 
     constructor(data) {
-        this.readJSON(JSON.parse(data))
+        if (data) {
+            this.readJSON(JSON.parse(data))
+        } else {
+            this.readJSON([])
+        }
     }
 
     readJSON(data) {
@@ -220,15 +223,40 @@ class Render {
             if (note.hasOwnProperty('text')) {
                 let text = new TextNote(note)
                 tab.push(text)
-                text.render()
             }
             if (note.hasOwnProperty('list')) {
                 let list = new ChecklistNote(note)
                 tab.push(list)
-                list.render()
             }
         })
         this.tab = tab
+    }
+
+
+    static noteView() {
+        let dateCell = this.dateCalendar
+        readNote.innerHTML = ''
+
+        viewDay.querySelector('h1').innerHTML = ''
+        viewDay.querySelector('h3').innerHTML = ''
+        viewDay.querySelector('p').innerHTML = ''
+
+        viewDay.querySelector('h1').innerHTML = (dateCell.getDate().toString().length === 1) ? 0 + '' + dateCell.getDate() : dateCell.getDate()
+        viewDay.querySelector('h3').innerHTML = day[dateCell.getDay()]
+        viewDay.querySelector('p').innerHTML = ((dateCell.getMonth() + 1).toString().length === 1) ? 0 + '' + (dateCell.getMonth() + 1) + '/' + dateCell.getFullYear() : (dateCell.getMonth() + 1) + '/' + dateCell.getFullYear()
+
+        viewDay.dateNowCalendar = dateCell
+
+        let days = document.querySelectorAll('td')
+        for (let item of days) {
+            item.classList.remove('selected-calendar')
+        }
+        this.classList.add('selected-calendar')
+
+        for (let item of this.note) {
+            item.render()
+        }
+        Add.close()
     }
 
     static sortNote(tab, attribute) {
@@ -238,9 +266,9 @@ class Render {
 
 class Action {
     static addButton() {
-        let button = document.createElement('button')
+        let button = document.createElement('a')
         button.addEventListener('click', Action.addChecklist)
-        button.innerHTML = 'ADD CHECK'
+        button.innerHTML = 'Ajouter une tache'
         button.classList.add('addCheck')
         this.append(button)
     }
@@ -252,11 +280,16 @@ class Action {
     }
 
     static addChecklist() {
+        if (document.querySelector('.add-list')) {
+            document.querySelector('.add-list').remove()
+        }
         let block = document.createElement('div')
+        block.classList.add('add-list')
         let input = document.createElement('INPUT')
-        let button = document.createElement('button')
+        input.classList.add('input-list')
+        let button = document.createElement('a')
 
-        button.innerHTML = 'create'
+        button.innerHTML = 'Ajouter'
         button.classList.add('createCheck')
         button.addEventListener('click', Action.addCheckbox)
 
@@ -288,6 +321,7 @@ class Action {
             block.append(label)
             Action.deleteButton.call(this.parentElement.parentElement)
             this.parentElement.replaceWith(block);
+            sycroStorage(noteArray.tab)
         } else {
             Action.deleteButton.call(this.parentElement.parentElement)
             this.parentElement.remove();
@@ -299,6 +333,7 @@ class Action {
         let list = this.parentNode.parentNode.children
         let id = Array.prototype.indexOf.call(list, this.parentElement)
         tab[id] = {[this.innerHTML]: this.parentNode.querySelector('input').checked}
+        sycroStorage(noteArray.tab)
     }
 
     static checkedList() {
@@ -306,16 +341,18 @@ class Action {
         let list = this.parentNode.parentNode.children
         let id = Array.prototype.indexOf.call(list, this.parentElement)
         tab[id][this.parentNode.querySelector('label').innerHTML] = !!this.checked;
+        sycroStorage(noteArray.tab)
     }
 
     static changeValue() {
         this.parentNode._noteReference_[this.className] = this.innerHTML
+        sycroStorage(noteArray.tab)
     }
 
     static addButtonChecklist() {
-        let button = document.createElement('button')
+        let button = document.createElement('a')
         button.addEventListener('click', Action.deleteChampChecklist)
-        button.innerHTML = 'x'
+        button.innerHTML = '+'
         button.classList.add('delete')
         this.append(button)
     }
@@ -334,6 +371,7 @@ class Action {
 
         Action.deleteButton.call(this.parentElement.parentElement)
         this.parentElement.remove()
+        sycroStorage(noteArray.tab)
     }
 }
 
@@ -346,6 +384,15 @@ class Add {
     static close() {
         let content = document.querySelector('.crud-note')
         content.style.display = 'none'
+
+        if (document.querySelector('.error')) {
+            document.querySelector('.error').remove()
+        }
+
+        Add.addChoice()
+
+        document.querySelector('.crud-note').querySelector('input[name="title"]').value = ''
+        document.querySelector('.crud-note').querySelector('input[name="urgent"]').value = 1
     }
 
     static addText() {
@@ -384,12 +431,12 @@ class Add {
         let labelList = document.createElement('label')
         labelList.insertAdjacentHTML('afterbegin', 'List :')
         let divList = document.createElement('div')
-        divList.classList.add('add-list')
+        divList.classList.add('list-create')
 
         let div = document.createElement('div')
         div.classList.add('button-checklist')
         let addCheckList = document.createElement('button')
-        addCheckList.innerHTML = '+'
+        addCheckList.innerHTML = 'Ajouter'
         addCheckList.addEventListener('click', Add.addCheckList)
 
         let close = document.createElement('button')
@@ -407,7 +454,7 @@ class Add {
     }
 
     static addCheckList() {
-        let list = document.querySelector('.add-list')
+        let list = document.querySelector('.list-create')
 
         let div = document.createElement('div')
         div.classList.add('champ')
@@ -415,8 +462,8 @@ class Add {
         let input = document.createElement('INPUT')
         input.name = 'list[]'
 
-        let close = document.createElement('button')
-        close.innerHTML = 'x'
+        let close = document.createElement('a')
+        close.innerHTML = '+'
         close.addEventListener('click', Add.deleteChamp)
 
         div.append(input)
@@ -470,10 +517,9 @@ class Add {
             })
         }
 
-        let recalldate = document.querySelector('input[name=recallDate]').value
+        let recalldate = viewDay.dateNowCalendar
 
         let urgent = document.querySelector('input[name=urgent]').value
-
 
         if (document.querySelector('.true-text') || document.querySelector('.true-list')) {
             let note
@@ -500,13 +546,42 @@ class Add {
                 if (document.querySelector('.error')) {
                     document.querySelector('.error').remove()
                 }
+
+                let cell = document.querySelector('.selected-calendar')
+                cell.note.push(note)
+
+                if (cell.querySelector('.event')) {
+                    cell.querySelector('.event').remove()
+                }
+
+                let span = document.createElement('span')
+                span.classList.add('event')
+                cell.append(span)
+
+
                 note.render()
                 noteArray.tab.push(note)
+                sycroStorage(noteArray.tab)
                 Add.close()
             }
         } else {
             new Error(["Veuillez selectionner un type de note"])
         }
+    }
+
+    static deleteNotes() {
+
+        for (let i = 0; i < noteArray.tab.length; i++) {
+            if (noteArray.tab[i].id === this.parentElement._noteReference_.id) {
+                noteArray.tab.splice(i, 1)
+            }
+        }
+        this.parentElement.remove()
+        sycroStorage(noteArray.tab)
+
+        let dateViewCalendar = document.querySelector('.view-day').dateNowCalendar
+        viewCalendar(dateViewCalendar.getMonth(), dateViewCalendar.getFullYear())
+        selectCalendar()
     }
 }
 
@@ -538,4 +613,9 @@ class Error {
     }
 }
 
-let noteArray = new Render(notesJSON)
+function sycroStorage(item) {
+    sessionStorage.clear()
+    sessionStorage.setItem('notes', JSON.stringify(item))
+}
+
+let noteArray = new Render(sessionStorage.getItem('notes'))
